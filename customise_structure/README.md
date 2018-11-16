@@ -1,50 +1,24 @@
-..
-    :copyright: Copyright (c) 2018 ftrack
+# Location A and Location B exercise
 
-===================
-Customise Structure
-===================
+- Create two locations, location.a and location.b, and register them in
+ftrack connect
+- Use ftrack connect to publish. It will publish to the first registered
+location, location.a.
+- Use copy_to_location_b event to copy the component from location.a to location.b
 
-When publishing files with the ftrack-python-api or ftrack Connect a location 
-plugin is used to determine where to write the output file. 
-This example can be as boilerplate when creating a custom location to be used in
-ftrack Connect or through the API.
+### Problems encountered
 
-A location consist of an accessor that is used to read and write the file from 
-the storage, and a structure plugin that is used to generate the target path 
-given an ftrack component. 
-In this example we use a DiskAccessor from the ftrack-python-api, and a 
-Structure plugin that we have copied from the StandardStructure in the 
-ftrack-python-api.
-
-Scope
------
-
-* Customise Structure
-* Register custom structure
-
-
-Install and setup
------------------
-
-1. Update the DISK_PREFIX variable in 
-<custom-location-folder>/location/custom_location_plugin.py to the root path 
-where you want to publish to.
-
-2. Make the location plugin available to the API either by setting the 
-FTRACK_EVENT_PLUGIN_PATH environment variable to <custom-location-folder>. 
-Alternatively use the plugin_paths in the ftrack_api.Session constructor 
-and point it to <custom-location-folder>.
-
-Customise
----------
-
-To modify the file names and paths that are generated when you publish to this 
-location, you will want to modify the sturcture plugin's get_resource_identifier 
-method. The structure plugin is found in location/structure.py.
-
-Dependencies
-------------
-
-* None
-
+- I could not install ftrack_connect on my Mac. I had Qt5 installed,
+so that was causing some issues, I installed Qt4 using https://github.com/cartr/homebrew-qt4,
+that allowed me to install PySide for example, but when trying to install
+ftrack_connect I still get an error:
+`
+Could not find a version that satisfies the requirement qtext (from ftrack-connect==1.1.6) (from versions: )
+No matching distribution found for qtext (from ftrack-connect==1.1.6)`
+- The way I solved this is by putting my code where ftrack connect is
+expecting it. Not ideal.
+- I could not find a proper way of defining the persistence of the message
+sent back to the web UI. Since I was publishing from ftrack-connect, by
+the time I got back to the UI, the message was gone. I hacked it by using
+a form with a label. I could also use a simple custom widget. Or maybe the
+best way is to actually add a Note somewhere so it ends up in the Inbox?
