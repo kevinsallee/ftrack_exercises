@@ -15,25 +15,26 @@ logger = logging.getLogger(
 )
 
 # Name of the location plugin.
-LOCATION_NAME = 'custom_location'
+LOCATION_NAMES = ['location.a', 'location.b']
 
 # Disk mount point.
-DISK_PREFIX = ''
+DISK_PREFIXES = ['/Users/kevin/ftrack/locationA', '/Users/kevin/ftrack/locationB']
 
 
 def configure_location(session, event):
     '''Listen.'''
-    location = session.ensure('Location', {'name': LOCATION_NAME})
+    for location_name, disk_prefix in zip(LOCATION_NAMES, DISK_PREFIXES):
+        location = session.ensure('Location', {'name': location_name})
 
-    location.accessor = ftrack_api.accessor.disk.DiskAccessor(
-        prefix=DISK_PREFIX
-    )
-    location.structure = structure.Structure()
-    location.priority = 1
+        location.accessor = ftrack_api.accessor.disk.DiskAccessor(
+            prefix=disk_prefix
+        )
+        location.structure = structure.Structure()
+        location.priority = 1
 
-    logger.info(
-        u'Registered location {0} at {1}.'.format(LOCATION_NAME, DISK_PREFIX)
-    )
+        logger.info(
+            u'Registered location {0} at {1}.'.format(location_name, disk_prefix)
+        )
 
 
 def register(api_object, **kw):
@@ -42,13 +43,14 @@ def register(api_object, **kw):
     if not isinstance(api_object, ftrack_api.Session):
         return
 
-    if not DISK_PREFIX:
-        logger.error('No disk prefix configured for location.')
-        return
+    for disk_prefix in DISK_PREFIXES:
+        if not disk_prefix:
+            logger.error('No disk prefix configured for location.')
+            return
 
-    if not os.path.exists(DISK_PREFIX) or not os.path.isdir(DISK_PREFIX):
-        logger.error('Disk prefix location does not exist.')
-        return
+        if not os.path.exists(disk_prefix) or not os.path.isdir(disk_prefix):
+            logger.error('Disk prefix location does not exist.')
+            return
 
     api_object.event_hub.subscribe(
         'topic=ftrack.api.session.configure-location',
