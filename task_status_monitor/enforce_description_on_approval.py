@@ -136,9 +136,7 @@ def handle_missing_descriptions(event):
 
 
 if __name__ == '__main__':
-    session = ftrack_api.Session(server_url='https://playground.ftrackapp.com',
-                                 api_key='MYKEY',
-                                 api_user='kevin.sallee@gmail.com')
+    session = ftrack_api.Session()
 
     session.event_hub.subscribe('topic=ftrack.update', enforce_entity_description_on_approval)
     session.event_hub.subscribe('topic=ftrack.action.launch and data.actionIdentifier={}'.format(ACTION_IDENTIFIER),
