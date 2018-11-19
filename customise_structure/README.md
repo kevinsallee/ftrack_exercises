@@ -19,6 +19,10 @@ No matching distribution found for qtext (from ftrack-connect==1.1.6)`
 expecting it. Not ideal.
 - I could not find a proper way of defining the persistence of the message
 sent back to the web UI. Since I was publishing from ftrack-connect, by
-the time I got back to the UI, the message was gone. I hacked it by using
-a form with a label. I could also use a simple custom widget. Or maybe the
-best way is to actually add a Note somewhere so it ends up in the Inbox?
+the time I got back to the UI, the message was not readable (stayed too
+little time on screen). I first decided to use a form with only a label,
+but that wasn't very nice looking. It would probably make sense to design
+a widget for this (or have persistence available).
+- The real estate for job description is limited, and there's no tooltip.
+I had to separate my message in 3 lines. I could not change the title
+to something like "Location transfer", it stays as "API Job"

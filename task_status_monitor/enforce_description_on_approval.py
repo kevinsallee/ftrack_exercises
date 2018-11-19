@@ -58,6 +58,18 @@ def get_approved_versions_with_no_description(version_ids):
             for version in versions]
 
 
+def send_to_web_ui(user_id, data):
+    # type: (str, Dict(str, Any) -> None
+    action_event = ftrack_api.event.base.Event(
+        topic='ftrack.action.trigger-user-interface',
+        data=data,
+        target=(
+            'applicationId=ftrack.client.web and user.id={0}'.format(user_id)
+        ),
+    )
+    session.event_hub.publish(action_event)
+
+
 def enforce_entity_description_on_approval(event):
     # type: (Dict[str, Any]) -> None
     """
@@ -83,19 +95,13 @@ def enforce_entity_description_on_approval(event):
                 'label': 'Description'
             }
         ])
-    action_event = ftrack_api.event.base.Event(
-        topic='ftrack.action.trigger-user-interface',
-        data={
-            'type': 'form',
-            'items': items,
-            'title': 'These approved elements need a description!',
-            'actionIdentifier': ACTION_IDENTIFIER,
-        },
-        target=(
-            'applicationId=ftrack.client.web and user.id={0}'.format(user_id)
-        ),
-    )
-    session.event_hub.publish(action_event)
+    data = {
+        'type': 'form',
+        'items': items,
+        'title': 'These approved elements need a description!',
+        'actionIdentifier': ACTION_IDENTIFIER,
+    }
+    send_to_web_ui(user_id, data)
 
 
 def handle_missing_descriptions(event):
@@ -121,18 +127,12 @@ def handle_missing_descriptions(event):
     if [v for v in values.values() if not v]:
         session.event_hub.publish(source_event)
     else:
-        action_event = ftrack_api.event.base.Event(
-            topic='ftrack.action.trigger-user-interface',
-            data={
-                'type': 'message',
-                'success': True,
-                'message': 'Descriptions updated! Please Refresh',
-            },
-            target=(
-                'applicationId=ftrack.client.web and user.id={0}'.format(user_id)
-            ),
-        )
-        session.event_hub.publish(action_event)
+        data = {
+            'type': 'message',
+            'success': True,
+            'message': 'Descriptions updated! Please Refresh',
+        }
+        send_to_web_ui(user_id, data)
 
 
 if __name__ == '__main__':

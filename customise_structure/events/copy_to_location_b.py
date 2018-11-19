@@ -1,3 +1,4 @@
+import json
 import logging
 from collections import namedtuple
 
@@ -39,26 +40,38 @@ def copy_from_location_a_to_location_b(event):
         asset_version = session.query("select link from AssetVersion where id is {}"
                                       .format(component['version_id'])).one()
         location_b = session.query('Location where name is "location.b"').one()
-        location_b.add_component(component, location)
+        user = session.query('User where username="{}"'.format(username)).one()
+        job = session.create('Job', {'user': user, 'status': 'running',
+            'data': json.dumps({
+                'description': 'Transfer <br>{}<br> from locationA to locationB'.format(
+                get_full_name(asset_version))})
+        })
 
-        action_event = ftrack_api.event.base.Event(
-            topic='ftrack.action.trigger-user-interface',
-            data={
-                'type': 'form',
-                'title': 'Version Transfer Success!',
-                'items': [{'type': 'label', 'value': '{} transferred from locationA to locationB'.format(get_full_name(
-                    asset_version))}],
-            },
-            target=(
-                'applicationId=ftrack.client.web and user.username="{0}"'.format(username)
-            ),
-        )
-        session.event_hub.publish(action_event)
-        return {'success': True, 'message': 'Cool!'}
+        location_b.add_component(component, location)
+        message = 'Version {} transferred from locationA to locationB'.format(get_full_name(asset_version))
+        send_message(username, message, True)
+        job['status'] = 'done'
+        session.commit()
+
+
+def send_message(username, msg_str, success):
+    # type: (str, bool) -> None
+    action_event = ftrack_api.event.base.Event(
+        topic='ftrack.action.trigger-user-interface',
+        data={
+            'type': 'message',
+            'success': success,
+            'message': msg_str
+        },
+        target=(
+            'applicationId=ftrack.client.web and user.username="{0}"'.format(username)
+        ),
+    )
+    session.event_hub.publish(action_event)
 
 
 if __name__ == '__main__':
-    session  = ftrack_api.Session()
+    session = ftrack_api.Session()
     custom_location_plugin.configure_location(session, None)
     session.event_hub.subscribe('topic=ftrack.location.component-added', copy_from_location_a_to_location_b)
     session.event_hub.wait()
