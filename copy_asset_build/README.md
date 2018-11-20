@@ -31,3 +31,7 @@ to do that, but I did not have time. Furthermore, I felt that some instructions
 were missing if I wanted to copy it "fully": what fields should be kept for each
 object type? Do we reset statuses, not put assignees, etc?
 So instead it's just linking to the "original" asset build
+
+- the documentation is not clear about how to mark a job as failed. But
+the error message if you try to put something random is, that's where I
+found the keyword was "failed"

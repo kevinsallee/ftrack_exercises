@@ -11,7 +11,10 @@ entities have a description.
 
 - I could not find an "elegant" way of dealing with the form results other
 than suscribing to `topic=ftrack.action.launch` with an `actionIdentifier`
-set manually.
+set manually. I could not find any documentation about how to automatically
+launch actions from events with forms, only with messages. I tried my best,
+ended up with a custom ACTION_IDENTIFIER and passing along the source_event
+
 - I could not find a proper way of refreshing the web UI after all missing
 descriptions are updated. When you don't update all of them, you will get
 another form, and the ones you updated are indeed refreshed automagically.
