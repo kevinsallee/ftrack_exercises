@@ -22,7 +22,8 @@ sent back to the web UI. Since I was publishing from ftrack-connect, by
 the time I got back to the UI, the message was not readable (stayed too
 little time on screen). I first decided to use a form with only a label,
 but that wasn't very nice looking. It would probably make sense to design
-a widget for this (or have persistence available).
+a widget for this (or have persistence available). I did create a job,
+so you do have the success message + the job done.
 - The real estate for job description is limited, and there's no tooltip.
 I had to separate my message in 3 lines. I could not change the title
 to something like "Location transfer", it stays as "API Job"
