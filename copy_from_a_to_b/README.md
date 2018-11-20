@@ -26,3 +26,7 @@ a widget for this (or have persistence available).
 - The real estate for job description is limited, and there's no tooltip.
 I had to separate my message in 3 lines. I could not change the title
 to something like "Location transfer", it stays as "API Job"
+- The way I register the locations in my session is probably wrong, I
+rushed it a bit, I probably need to change the plugin_paths but the
+dependency to ftrack_connect made me rush this a bit. Instead, it's
+registering the locations "manually"
