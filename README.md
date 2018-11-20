@@ -24,3 +24,6 @@ to install ftrack_connect, and that put me behind schedule.
 READMEs.
 - I kept my features in separate branches, my commits logical and did
 PRs I validated myself for each change (except adding READMEs etc)
+- I inspected all the files I wrote in Pycharm to make sure the code is
+at least PEP8 compliant
+- I included type hinting for all the functions I wrote
