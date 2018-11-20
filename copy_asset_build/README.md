@@ -27,5 +27,7 @@ I found that strange but there might be a reason for that.
 
 - The instructions did not say if a deep copy was needed (tasks, versions,
 components and all their files in different locations). I would have liked
-to do that, but I did not have time. So instead it's just linking to the
-"original" asset build
+to do that, but I did not have time. Furthermore, I felt that some instructions
+were missing if I wanted to copy it "fully": what fields should be kept for each
+object type? Do we reset statuses, not put assignees, etc?
+So instead it's just linking to the "original" asset build
